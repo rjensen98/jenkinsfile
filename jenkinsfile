@@ -11,6 +11,26 @@ pipeline {
                 echo "ANOTHER - ${ANOTHER}"
             }
         }
+        stage('Sanity check') {
+            steps {
+                input "Does the previous environment look ok?"
+            }
+        }
+        stage('Deploy - UAT') {
+            steps {
+                echo 'Deploying to UAT...'
+            }
+        }
+        stage('Sanity check 2') {
+            steps {
+                input "Does the previous environment look ok?"
+            }
+        }
+        stage('Deploy - Prod') {
+            steps {
+                echo 'Deploying to Prod...'
+            }
+        }
         // stage('npm-build') {
         //     agent {
         //         docker {
