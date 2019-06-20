@@ -1,29 +1,33 @@
 pipeline {
-    agent any 
+    agent any
+    environment {
+        ANOTHER = 'true'
+    }
     stages {
         stage('Stage 1') {
             steps {
-                echo 'Hello world!' 
-                sh 'node -v'
+                echo 'Hello world!'
+                echo "RJ_VAR - ${RJ_VAR}"
+                echo "ANOTHER - ${ANOTHER}"
             }
         }
-        stage('npm-build') {
-            agent {
-                docker {
-                    image 'node:7.4'
-                }
-            }
+        // stage('npm-build') {
+        //     agent {
+        //         docker {
+        //             image 'node:7.4'
+        //         }
+        //     }
         
-            steps {
-                echo "Branch is ${env.BRANCH_NAME}..."
-                sh 'node -v'
-                sh 'node app.js'
+        //     steps {
+        //         echo "Branch is ${env.BRANCH_NAME}..."
+        //         sh 'node -v'
+        //         sh 'node app.js'
         
-                // withNPM(npmrcConfig:'my-custom-npmrc') {
-                //     echo "Performing npm build..."
-                //     sh 'npm install'
-                // }
-            }
-        }
+        //         // withNPM(npmrcConfig:'my-custom-npmrc') {
+        //         //     echo "Performing npm build..."
+        //         //     sh 'npm install'
+        //         // }
+        //     }
+        // }
     }
 }
