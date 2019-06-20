@@ -5,7 +5,7 @@ pipeline {
             steps {
                 echo 'Hello world!' 
             }
-        },
+        }
         stage('npm-build') {
             agent {
                 docker {
