@@ -15,11 +15,13 @@ pipeline {
         
             steps {
                 echo "Branch is ${env.BRANCH_NAME}..."
+                sh 'node -v'
+                sh 'node app.js'
         
-                withNPM(npmrcConfig:'my-custom-npmrc') {
-                    echo "Performing npm build..."
-                    sh 'npm install'
-                }
+                // withNPM(npmrcConfig:'my-custom-npmrc') {
+                //     echo "Performing npm build..."
+                //     sh 'npm install'
+                // }
             }
         }
     }
