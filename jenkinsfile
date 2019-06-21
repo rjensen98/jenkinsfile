@@ -26,18 +26,21 @@ pipeline {
             agent {
                 docker {
                     image 'node:7.4'
+                    args '-p 3000:3000'
                 }
             }
         
             steps {
                 echo "Branch is ${env.BRANCH_NAME}..."
                 sh 'node -v'
-                // sh 'node app.js'
-        
-                // withNPM(npmrcConfig:'my-custom-npmrc') {
-                //     echo "Performing npm build..."
-                //     sh 'npm install'
-                // }
+                sh 'npm install'
+                sh 'npm start'
+                input "Check http://localhost:3000; Click button to proceed."
+            }
+        }
+        stage('Pause for site check') {
+            steps {
+                input "Is http://localhost:3000 still running? Click for clean-up."
             }
         }
     }
