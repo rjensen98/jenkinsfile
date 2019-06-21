@@ -1,3 +1,6 @@
+// Some recent changes (especially the `docker run` command below) are based off of instructions
+// at: https://jenkins.io/doc/tutorials/build-a-node-js-and-react-app-with-npm/
+//
 // launch docker jenkins with the following command:
 //     docker run --rm -u root -p 8080:8080 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v "$HOME":/home jenkinsci/blueocean
 // note the `-v /var/run/docker.sock:/var/run/docker.sock`; it enables the jenkins container to successfully launch and create other containers
