@@ -34,7 +34,7 @@ pipeline {
                 echo "Branch is ${env.BRANCH_NAME}..."
                 sh 'node -v'
                 sh 'npm install'
-                sh 'npm start'
+                sh 'npm start &'
                 input "Check http://localhost:3000; Click button to proceed."
             }
         }
