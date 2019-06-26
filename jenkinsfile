@@ -6,6 +6,10 @@
 // note the `-v /var/run/docker.sock:/var/run/docker.sock`; it enables the jenkins container to successfully launch and create other containers
 pipeline {
     agent any
+    parameters {
+        gitParameter branchFilter: "origin/(.*)", defaultValue: "master", name: "BRANCH", type: "PT_BRANCH"
+        choice name: "REGION", choices: ["us-east-1"], description: "AWS Region"
+    }
     environment {
         ANOTHER = 'true'
     }
