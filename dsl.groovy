@@ -54,8 +54,11 @@ folder(folderName) {
 def testEchoVar = 'hello world'
 
 repos.each { repo ->
+  print "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
   ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute()
+  print "Clone complete. Files: "
   ["ls", "-R"].execute()
+  print "Evaluating jenkinsfile..."
   evaluate(new File("${repo.name}/${repo.script}"))
 }
 
