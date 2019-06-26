@@ -51,9 +51,9 @@ folder(folderName) {
 repos.each { repo ->
   def list2 = ["ls", "-R", "/${repo.name}"].execute()
   println list2.text
-  println ["rm", "-Rf", repo.name].execute().text
+  ["rm", "-Rf", repo.name].execute().text
   //println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-  println ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute().text
+  ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute().text
   println "Clone complete. Files: "
   def list = ["ls", "-R", "/${repo.name}"].execute()
   println list.text
