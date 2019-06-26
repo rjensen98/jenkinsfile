@@ -1,9 +1,6 @@
 String jsonData = readFileFromWorkspace('jobs-config.json')
 groovy.json.JsonSlurperClassic slurper = new groovy.json.JsonSlurperClassic()
 def repos = slurper.parseText(jsonData)
-repos.each {
-    print "${it.key}"
-}
 
 def folderName = 'dsl-test'
 folder(folderName) {
@@ -54,11 +51,12 @@ folder(folderName) {
 def testEchoVar = 'hello world'
 
 repos.each { repo ->
-  print "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-  ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute().text
-  print "Clone complete. Files: "
-  ["ls", "-R"].execute().text
-  print "Evaluating jenkinsfile..."
+  println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
+  def clone = ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute()
+  println clone.text
+  println "Clone complete. Files: "
+  ["ls", "-R"].execute()
+  println "Evaluating jenkinsfile..."
   evaluate(new File("${repo.name}/${repo.script}"))
 }
 
