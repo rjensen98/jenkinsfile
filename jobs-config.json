@@ -2,5 +2,5 @@
     "script":"jenkinsfile",
     "url":"https://github.com/rjensen98/jenkinsfile",
     "cred":"svc4GitHubProdRO",
-    "branch":"*/master"
+    "branch":"master"
 }]
