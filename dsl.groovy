@@ -53,8 +53,8 @@ repos.each { repo ->
   def clone = ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute()
   println clone.text
   println "Clone complete. Files: "
-  //def list = ["ls", "-R"].execute()
-  //println list.text
+  def list = ["ls", "-R", "/rj-jenkinsfile-demo"].execute()
+  println list.text
   println "Evaluating jenkinsfile..."
   evaluate(new File("${repo.name}/${repo.script}"))
 }
