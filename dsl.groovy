@@ -55,30 +55,10 @@ def testEchoVar = 'hello world'
 
 repos.each { repo ->
   print "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-  ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute()
+  ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute().text
   print "Clone complete. Files: "
-  ["ls", "-R"].execute()
+  ["ls", "-R"].execute().text
   print "Evaluating jenkinsfile..."
   evaluate(new File("${repo.name}/${repo.script}"))
 }
-
-// jobs.each { job ->
-//   pipelineJob("${folderName}/${job.name}") {
-//     definition {
-//       cpsScm {
-//         scm {
-//           git {
-//             remote {
-//               name('origin')
-//               url(job.url)
-//               credentials(job.cred)
-//             }
-//             branch(job.branch)
-//           }
-//         }
-//         scriptPath(job.script)
-//       }
-//     }
-//   }
-// }
 
