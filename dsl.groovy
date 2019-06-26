@@ -1,6 +1,9 @@
 String jsonData = readFileFromWorkspace('jobs-config.json')
 groovy.json.JsonSlurperClassic slurper = new groovy.json.JsonSlurperClassic()
 def repos = slurper.parseText(jsonData)
+repos.each {
+    print "${it.key}"
+}
 
 def folderName = 'dsl-test'
 folder(folderName) {
