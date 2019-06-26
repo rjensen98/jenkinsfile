@@ -49,11 +49,12 @@ folder(folderName) {
 }
 
 repos.each { repo ->
+  def cleanup = ["rm", "-Rf", repo.name].execute()
   //println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
   def clone = ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute()
   println clone.text
   println "Clone complete. Files: "
-  def list = ["ls", "-R", "/rj-jenkinsfile-demo"].execute()
+  def list = ["ls", "-R", "/${repo.name}"].execute()
   println list.text
   println "Evaluating jenkinsfile..."
   evaluate(new File("${repo.name}/${repo.script}"))
