@@ -57,7 +57,7 @@ repos.each { repo ->
         println "Setting up env: ${jobEnv}"
 
         // Pass some variables to the child DSL script
-        def bindings = [JOB_ENV: jobEnv, JOB_NAME: repo.name, JOB_REPO_URL: repo.url, PARENT_FOLDER: folderName]
+        def bindings = [JOB_ENV: jobEnv, JOB_NAME: repo.name, JOB_REPO_URL: repo.url, JOB_REPO_CREDS: repo.cred, PARENT_FOLDER: folderName]
         def jobManagement = new JenkinsJobManagement(System.out, bindings, workspace)
 
         println "Executing script: ${repo.name}/${repo.script}"
