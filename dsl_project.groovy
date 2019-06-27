@@ -30,7 +30,11 @@ pipelineJob("${PARENT_FOLDER}/${JOB_NAME}-${JOB_ENV}") {
                     }
                     branches('master')
                     extensions {
-                        cloneOptions { depth(1) }
+                        cloneOptions {
+                            depth(1)
+                            noTags(true)
+                            shallow(true)
+                        }
                     }
                 }
             }
