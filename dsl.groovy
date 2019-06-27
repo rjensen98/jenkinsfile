@@ -42,9 +42,10 @@ folder(folderName) {
 // Loop through job configurations to set each one up
 repos.each { repo ->
     println "Deleting ${WORKSPACE}/${repo.name}..."
-    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+    def workspaceInit = ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+
     println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-    ["git", "clone", "--branch", repo.branch, repo.url, "${WORKSPACE}/${repo.name}"].execute()
+    def gitClone = ["git", "clone", "--branch", repo.branch, repo.url, "${WORKSPACE}/${repo.name}"].execute()
 
     // Dynamically run child project groovy DSL definitions
     // (https://devops.datenkollektiv.de/from-plain-groovy-to-jenkins-job-dsl-a-quantum-jump.html)
@@ -66,10 +67,12 @@ repos.each { repo ->
 
     // Final clean-up
     println "Deleting ${WORKSPACE}/${repo.name} again..."
-    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+    def workspaceCleanup = ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
 }
+
 
 //        import javaposse.jobdsl.plugin.LookupStrategy
 //        import hudson.FilePath
 //        def currentBuild = Thread.currentThread().executable  // hudson.model.FreeStyleBuild
 //        def jobManagement = new JenkinsJobManagement(System.out, bindings, currentBuild, new FilePath(new File('.')), LookupStrategy.JENKINS_ROOT)
+
