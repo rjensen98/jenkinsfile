@@ -1,9 +1,38 @@
+/**
+ *  DSL_SEED.GROOVY
+ *
+ *    DSL job to create Jenkins pipeline jobs based on individual project's pipeline definitions
+ *
+ *    Prerequisites:
+ *        - Jenkins must have a global environment variable, "PIPELINE_JOB_ENVIRONMENTS", defined
+ *            - this is a CSV list of environments that this Jenkins server is integrated with
+ *              (i.e. "poc,dev,uat")
+ *        - There must be a jobs-config.json in the same repo as this DSL file
+ *            - file contains an array of job configurations to be implemented
+ *            - structure:
+ *                [
+ *                    {
+ *                        "name": "name-of-project-to-be-created",
+ *                        "script": "project-dsl.groovy",  // groovy script within the project's own repo that defines how the pipeline job should be configured
+ *                        "url": "repository-url-for-child-project.git",
+ *                        "branch": "branch-to-clone-child-project-from",
+ *                        "cred": "jenkins-credential-id-for-access-to-child-project-repo"
+ *                    }
+ *                ]
+ *    Optional:
+ *        - "folderName" variable below may be modified to specify the project folder name this DSL will configure
+ */
+
+
 import javaposse.jobdsl.dsl.DslScriptLoader
 import javaposse.jobdsl.plugin.JenkinsJobManagement
 import hudson.model.*
 
+// Modify this for an alternate project name
 def folderName = 'Adam'
 
+// Get list of managed environments from Jenkins' PIPELINE_JOB_ENVIRONMENTS environment variable
+// NOTE: PIPELINE_JOB_ENVIRONMENTS **MUST** be set within Manage Jenkins -> Configure System >> Global Properties >> Environment variables
 def jobEnvs = "${PIPELINE_JOB_ENVIRONMENTS}".split(',')
 
 // Get job configuration data
