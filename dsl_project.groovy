@@ -33,7 +33,6 @@ pipelineJob("${PARENT_FOLDER}/${JOB_NAME}-${JOB_ENV}") {
                         cloneOptions {
                             depth(1)
                             noTags(true)
-                            shallow(true)
                         }
                     }
                 }
