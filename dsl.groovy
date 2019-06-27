@@ -1,63 +1,75 @@
+import javaposse.jobdsl.dsl.DslScriptLoader
+import javaposse.jobdsl.plugin.JenkinsJobManagement
+import hudson.model.*
+
+def folderName = 'Adam'
+
+def jobEnvs = "${PIPELINE_JOB_ENVIRONMENTS}".split(',')
+
+// Get job configuration data
 String jsonData = readFileFromWorkspace('jobs-config.json')
 groovy.json.JsonSlurperClassic slurper = new groovy.json.JsonSlurperClassic()
 def repos = slurper.parseText(jsonData)
 
-def folderName = 'dsl-test'
+// Create folders and views
 folder(folderName) {
     views {
-        listView('poc') {
-            jobs {
-              regex('.*-poc')  
-            }
-            columns{
-                status()
-                name()
-                buildButton()
-            }
-        }
-        listView('dev') {
-            jobs {
-              regex('.*-dev')  
-            }
-            columns{
-                status()
-                name()
-                buildButton()
-            }
-        }
-        listView('tst') {
-            jobs {
-              regex('.*-tst')  
-            }
-            columns{
-                status()
-                name()
-                buildButton()
+        for (String jobEnv : jobEnvs) {
+            listView(jobEnv) {
+                jobs {
+                    regex(".*-${jobEnv}")
+                }
+                columns {
+                    status()
+                    name()
+                    buildButton()
+                }
             }
         }
         listView('DependencyChecks') {
-          jobs {
-            regex('.*-dependency-checker')
-          }
-          columns {
-            status()
-            name()
-            buildButton()
-          }
+            jobs {
+                regex('.*-dependency-checker')
+            }
+            columns {
+                status()
+                name()
+                buildButton()
+            }
         }
     }
 }
 
+// Loop through job configurations to set each one up
 repos.each { repo ->
-  def list2 = ["ls", "-R", "/${repo.name}"].execute()
-  println list2.text
-  ["rm", "-Rf", repo.name].execute().text
-  //println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-  ["git", "clone", "--branch", repo.branch, repo.url, repo.name].execute().text
-  println "Clone complete. Files: "
-  def list = ["ls", "-R", "/${repo.name}"].execute()
-  println list.text
-  println "Evaluating jenkinsfile..."
-  evaluate(new File("${repo.name}/${repo.script}"))
+    println "Deleting ${WORKSPACE}/${repo.name}..."
+    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+    println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
+    ["git", "clone", "--branch", repo.branch, repo.url, "${WORKSPACE}/${repo.name}"].execute()
+
+    // Dynamically run child project groovy DSL definitions
+    // (https://devops.datenkollektiv.de/from-plain-groovy-to-jenkins-job-dsl-a-quantum-jump.html)
+    def jobDslScript = new File("${WORKSPACE}/${repo.name}/${repo.script}")
+    def workspace = new File('.')
+
+    // Create a job for each environment defined by Jenkins' Global "PIPELINE_JOB_ENVIRONMENTS" env variable
+    for (String jobEnv : jobEnvs) {
+        println "Setting up env: ${jobEnv}"
+
+        // Pass some variables to the child DSL script
+        def bindings = [JOB_ENV: jobEnv, JOB_NAME: repo.name, JOB_REPO_URL: repo.url, PARENT_FOLDER: folderName]
+        def jobManagement = new JenkinsJobManagement(System.out, bindings, workspace)
+
+        println "Executing script: ${repo.name}/${repo.script}"
+        // https://github.com/jenkinsci/job-dsl-plugin/blob/350005c9878ab4fd5210667c25b9f555b230fdae/job-dsl-core/src/main/groovy/javaposse/jobdsl/dsl/AbstractDslScriptLoader.groovy#L251
+        new DslScriptLoader(jobManagement).runScript(jobDslScript.text)
+    }
+
+    // Final clean-up
+    println "Deleting ${WORKSPACE}/${repo.name} again..."
+    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
 }
 
+//        import javaposse.jobdsl.plugin.LookupStrategy
+//        import hudson.FilePath
+//        def currentBuild = Thread.currentThread().executable  // hudson.model.FreeStyleBuild
+//        def jobManagement = new JenkinsJobManagement(System.out, bindings, currentBuild, new FilePath(new File('.')), LookupStrategy.JENKINS_ROOT)

@@ -1,5 +1,5 @@
 [{"name":"rj-jenkinsfile-demo",
-    "script":"jenkinsfile-for-dsl",
+    "script":"dsl_project.groovy",
     "url":"https://github.com/rjensen98/jenkinsfile",
     "cred":"svc4GitHubProdRO",
     "branch":"master"
