@@ -1,4 +1,5 @@
 // pipeline definition API can be found at http://adam-ci.itamswarm.rgare.net/plugin/job-dsl/api-viewer/index.html
+// syntax checking can be found at http://job-dsl.herokuapp.com/
 
 
 folder("${PARENT_FOLDER}")
