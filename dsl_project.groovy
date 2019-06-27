@@ -23,10 +23,12 @@ pipelineJob("${PARENT_FOLDER}/${JOB_NAME}-${JOB_ENV}") {
         cpsScm {
             scriptPath('jenkinsfile-for-dsl')
             scm {
-                git("${JOB_REPO_URL}", 'master') {
+                git {
+                    remote { "${JOB_REPO_URL}" }
+                    branches('master')
                     extensions {
-                        cloneOption {
-                            shallow(true)
+                        cloneOptions {
+                            depth(1)
                         }
                     }
                 }

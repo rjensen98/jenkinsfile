@@ -42,10 +42,10 @@ folder(folderName) {
 // Loop through job configurations to set each one up
 repos.each { repo ->
     println "Deleting ${WORKSPACE}/${repo.name}..."
-    def workspaceInit = ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute().waitFor()
 
     println "Cloning ${repo.url}/${repo.branch} -> ${repo.name}"
-    def gitClone = ["git", "clone", "--branch", repo.branch, repo.url, "${WORKSPACE}/${repo.name}"].execute()
+    ["git", "clone", "--branch", repo.branch, repo.url, "${WORKSPACE}/${repo.name}"].execute().waitFor()
 
     // Dynamically run child project groovy DSL definitions
     // (https://devops.datenkollektiv.de/from-plain-groovy-to-jenkins-job-dsl-a-quantum-jump.html)
@@ -67,7 +67,7 @@ repos.each { repo ->
 
     // Final clean-up
     println "Deleting ${WORKSPACE}/${repo.name} again..."
-    def workspaceCleanup = ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute()
+    ["rm", "-Rf", "${WORKSPACE}/${repo.name}"].execute().waitFor()
 }
 
 
