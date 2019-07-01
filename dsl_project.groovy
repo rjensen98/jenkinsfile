@@ -8,7 +8,14 @@ pipelineJob("${PARENT_FOLDER}/${JOB_NAME}-${JOB_ENV}") {
         booleanParam('FLAG', true)
         choiceParam('OPTION', ['option 1 (default)', 'option 2', 'option 3'])
         if(JOB_ENV == "poc") {
-          choiceParam('POC Branch Chooser', ['master (default)', 'feature', 'other', 'something else'])
+            gitParameter {
+                name("Branch Selector")
+                type('Branch')
+                defaultValue('master')
+                sortMode('ASCENDING_SMART')
+                useRepository("${JOB_REPO_URL}")
+                quickFilterEnabled(true)
+            }
         }
     }
     properties {
