@@ -6,10 +6,6 @@ pipeline {
             }
         }
 
-  parameters {
-    choice name: "REGION", choices: ["us-east-1"], description: "AWS Region"
-  }
-
   environment {
     VAULT_AWS_PATH="IT/deployment_keys"
     STAGE="poc"
@@ -17,15 +13,14 @@ pipeline {
 
   options {
     disableConcurrentBuilds()
-    buildDiscarder(logRotator(numToKeepStr: "50", daysToKeepStr: "350"))
   }
 
   stages {
     stage("Check Required Settings") {
       steps {
-        ansiColor("xterm") {
+//        ansiColor("xterm") {
           sh "echo ${env.STAGE}"
-        }
+//        }
       }
       post {
         failure {
@@ -37,9 +32,9 @@ pipeline {
     }
     stage ("Deploy") {
       steps {
-        ansiColor("xterm") {
+//        ansiColor("xterm") {
           sh "npm i -g serverless --ignore-scripts spawn-sync"  // TODO: make as part of docker image
-        }
+//        }
       }
       post {
         failure {
