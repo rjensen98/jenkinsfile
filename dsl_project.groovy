@@ -7,6 +7,9 @@ pipelineJob("${PARENT_FOLDER}/${JOB_NAME}-${JOB_ENV}") {
     parameters {
         booleanParam('FLAG', true)
         choiceParam('OPTION', ['option 1 (default)', 'option 2', 'option 3'])
+        if(JOB_ENV == "poc") {
+          choiceParam('POC Branch Chooser', ['master (default)', 'feature', 'other', 'something else'])
+        }
     }
     properties {
         buildDiscarder {
